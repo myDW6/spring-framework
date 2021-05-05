@@ -99,6 +99,7 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 	 * Instantiation should use a no-arg constructor.
 	 */
 	protected Object instantiateWithMethodInjection(RootBeanDefinition bd, @Nullable String beanName, BeanFactory owner) {
+		//在SimpleInstantiationstragy中不被支持
 		throw new UnsupportedOperationException("Method Injection not supported in SimpleInstantiationStrategy");
 	}
 

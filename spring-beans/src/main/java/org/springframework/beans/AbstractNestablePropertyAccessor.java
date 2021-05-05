@@ -79,7 +79,7 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 	private int autoGrowCollectionLimit = Integer.MAX_VALUE;
 
 	@Nullable
-	Object wrappedObject;
+	Object wrappedObject; //被包装的对象就是实际的bean对象  spring创建好bean之后封装成beanWrapper对象再传来传去
 
 	private String nestedPath = "";
 
@@ -415,7 +415,7 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 	}
 
 	private void processLocalProperty(PropertyTokenHolder tokens, PropertyValue pv) {
-		PropertyHandler ph = getLocalPropertyHandler(tokens.actualName);
+		PropertyHandler ph = getLocalPropertyHandler(tokens.actualName); //获取属性的处理器
 		if (ph == null || !ph.isWritable()) {
 			if (pv.isOptional()) {
 				if (logger.isDebugEnabled()) {

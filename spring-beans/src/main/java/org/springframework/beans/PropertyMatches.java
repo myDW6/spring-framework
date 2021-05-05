@@ -29,7 +29,8 @@ import org.springframework.util.StringUtils;
  * Helper class for calculating property matches, according to a configurable
  * distance. Provide the list of potential matches and an easy way to generate
  * an error message. Works for both java bean properties and fields.
- *
+ *一个辅助类 计算属性匹配度 根据可配置的distance  两个属性之间差的字符 提供一个潜在的匹配的列表和很容易的方式生成错误信息
+ * 主要用于框架内部 特别是绑定的基础设施上
  * <p>Mainly for use within the framework and in particular the binding facility.
  *
  * @author Alef Arendsen
@@ -143,7 +144,9 @@ public abstract class PropertyMatches {
 
 	/**
 	 * Calculate the distance between the given two Strings
-	 * according to the Levenshtein algorithm.
+	 * according to the Levenshtein algorithm. 字符串编辑距离算法
+	 * https://www.bilibili.com/video/BV15h411Z7Qd
+	 * 填dp表的过程
 	 * @param s1 the first String
 	 * @param s2 the second String
 	 * @return the distance value

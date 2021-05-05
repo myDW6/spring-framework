@@ -41,7 +41,7 @@ public interface ObjectFactory<T> {
 
 	/**
 	 * Return an instance (possibly shared or independent)
-	 * of the object managed by this factory.
+	 * of the object managed by this factory. 被工厂管理的一个具体实例
 	 * @return the resulting instance
 	 * @throws BeansException in case of creation errors
 	 */

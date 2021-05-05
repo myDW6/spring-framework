@@ -34,9 +34,10 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
+ * 代表了一个合并之后的根定义
  * A root bean definition represents the merged bean definition that backs
  * a specific bean in a Spring BeanFactory at runtime. It might have been created
- * from multiple original bean definitions that inherit from each other,
+ * from multiple original bean definitions that inherit from each other, 可能通过多种原始的bean定义来创建
  * typically registered as {@link GenericBeanDefinition GenericBeanDefinitions}.
  * A root bean definition is essentially the 'unified' bean definition view at runtime.
  *
@@ -55,7 +56,7 @@ import org.springframework.util.Assert;
 public class RootBeanDefinition extends AbstractBeanDefinition {
 
 	@Nullable
-	private BeanDefinitionHolder decoratedDefinition;
+	private BeanDefinitionHolder decoratedDefinition; //这个BeanDefinitionHolder包含了beanName, BeanDefination 和 别名
 
 	@Nullable
 	private AnnotatedElement qualifiedElement;

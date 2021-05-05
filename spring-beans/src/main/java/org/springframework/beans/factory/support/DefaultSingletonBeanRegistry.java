@@ -74,10 +74,10 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	private static final int SUPPRESSED_EXCEPTIONS_LIMIT = 100;
 
 
-	/** Cache of singleton objects: bean name to bean instance. */
+	/** Cache of singleton objects: bean name to bean instance.单例对象最终缓存的容器 */
 	private final Map<String, Object> singletonObjects = new ConcurrentHashMap<>(256);
 
-	/** Cache of singleton factories: bean name to ObjectFactory. */
+	/** Cache of singleton factories: bean name to ObjectFactory. 单例工厂的缓存 beanName到ObjectFactory的映射 */
 	private final Map<String, ObjectFactory<?>> singletonFactories = new HashMap<>(16);
 
 	/** Cache of early singleton objects: bean name to bean instance. */
@@ -154,9 +154,13 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	protected void addSingletonFactory(String beanName, ObjectFactory<?> singletonFactory) {
 		Assert.notNull(singletonFactory, "Singleton factory must not be null");
 		synchronized (this.singletonObjects) {
+			//对singletonObjects做同步 真正缓存我们的bean的那个map
 			if (!this.singletonObjects.containsKey(beanName)) {
+				//将beanName与创建对象的工厂缓存起来
 				this.singletonFactories.put(beanName, singletonFactory);
+				//
 				this.earlySingletonObjects.remove(beanName);
+				//名字叫xx的从registeredSingletons移除
 				this.registeredSingletons.add(beanName);
 			}
 		}
@@ -204,8 +208,8 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	}
 
 	/**
-	 * Return the (raw) singleton object registered under the given name,
-	 * creating and registering a new one if none registered yet.
+	 * Return the (raw) singleton object registered under the given name, 返回一个指定名字下注册的单例对象
+	 * creating and registering a new one if none registered yet. 尚未注册就创建然后注册一个
 	 * @param beanName the name of the bean
 	 * @param singletonFactory the ObjectFactory to lazily create the singleton
 	 * with, if necessary
@@ -214,9 +218,11 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	public Object getSingleton(String beanName, ObjectFactory<?> singletonFactory) {
 		Assert.notNull(beanName, "Bean name must not be null");
 		synchronized (this.singletonObjects) {
+			//同步的是singletonObjects 单例对象最终缓存的容器
 			Object singletonObject = this.singletonObjects.get(beanName);
 			if (singletonObject == null) {
 				if (this.singletonsCurrentlyInDestruction) {
+					//是否处于正在销毁状态
 					throw new BeanCreationNotAllowedException(beanName,
 							"Singleton bean creation not allowed while singletons of this factory are in destruction " +
 							"(Do not request a bean from a BeanFactory in a destroy method implementation!)");
@@ -224,15 +230,15 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 				if (logger.isDebugEnabled()) {
 					logger.debug("Creating shared instance of singleton bean '" + beanName + "'");
 				}
-				beforeSingletonCreation(beanName);
-				boolean newSingleton = false;
+				beforeSingletonCreation(beanName);//一些异常处理 相当于一个回调 可自定义
+				boolean newSingleton = false; //标志量 标记bean是否创建成功
 				boolean recordSuppressedExceptions = (this.suppressedExceptions == null);
 				if (recordSuppressedExceptions) {
 					this.suppressedExceptions = new LinkedHashSet<>();
 				}
 				try {
-					singletonObject = singletonFactory.getObject();
-					newSingleton = true;
+					singletonObject = singletonFactory.getObject();//回到lambda表达式
+					newSingleton = true; //标记创建成功
 				}
 				catch (IllegalStateException ex) {
 					// Has the singleton object implicitly appeared in the meantime ->
@@ -254,10 +260,10 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					if (recordSuppressedExceptions) {
 						this.suppressedExceptions = null;
 					}
-					afterSingletonCreation(beanName);
+					afterSingletonCreation(beanName); //当singleton被创建完毕之后还有一个回调
 				}
 				if (newSingleton) {
-					addSingleton(beanName, singletonObject);
+					addSingleton(beanName, singletonObject); //传入beanName 和singletonObject(最终得到的bean实例) 将对象缓存
 				}
 			}
 			return singletonObject;

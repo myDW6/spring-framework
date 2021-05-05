@@ -466,7 +466,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 		if (className == null) {
 			return null;
 		}
-		Class<?> resolvedClass = ClassUtils.forName(className, classLoader);
+		Class<?> resolvedClass = ClassUtils.forName(className, classLoader); //增强的class.forName()
 		this.beanClass = resolvedClass;
 		return resolvedClass;
 	}
@@ -512,7 +512,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 */
 	@Override
 	public boolean isSingleton() {
-		return SCOPE_SINGLETON.equals(this.scope) || SCOPE_DEFAULT.equals(this.scope);
+		return SCOPE_SINGLETON.equals(this.scope) || SCOPE_DEFAULT.equals(this.scope); //从AbstractBeanDefinition中获取的scope
 	}
 
 	/**
