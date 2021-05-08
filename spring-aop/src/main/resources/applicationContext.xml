@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+	<bean id="myService" class="com.shaodw.aop.MyServiceImpl"/>
+	<bean id="myAdvisor" class="com.shaodw.aop.MyAdvisor"/>
+	<bean id="myAdvisor1" class="com.shaodw.aop.MyAdvisor1"/>
+
+	<bean id="myAop" class="org.springframework.aop.framework.ProxyFactoryBean">
+<!--		代理生成的类要实现的接口 需要实现MyService接口 实际上不仅是这个 还实现了多个接口-->
+		<property name="proxyInterfaces" value="com.shaodw.aop.MyService"/>
+<!--		对谁进行代理MyServiceImpl-->
+		<property name="target" ref="myService"/>
+<!--		应用这个通知器-->
+		<property name="interceptorNames">
+			<list>
+				<value>myAdvisor</value>
+				<value>myAdvisor1</value>
+			</list>
+		</property>
+	</bean>
+</beans>

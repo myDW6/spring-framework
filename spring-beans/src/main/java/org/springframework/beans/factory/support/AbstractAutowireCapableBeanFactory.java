@@ -603,7 +603,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		Object exposedObject = bean;
 		try {
 			//属性赋值
-			populateBean(beanName, mbd, instanceWrapper);
+			populateBean(beanName, mbd, instanceWrapper);//如果一个bean是ProxyFactoryBean 你看它有三个属性 分别是target proxyInterfaces  interceptornames 这三个都是bean
+			//所以需要属性赋值 那转而会去get这些bean
 			exposedObject = initializeBean(beanName, exposedObject, mbd);
 		}
 		catch (Throwable ex) {

@@ -20,9 +20,11 @@ import org.springframework.lang.Nullable;
 
 /**
  * Interface to be implemented by objects used within a {@link BeanFactory} which
- * are themselves factories for individual objects. If a bean implements this
+ * are themselves factories for individual objects.
+ * 本身就是工厂 是针对一个个对象的工厂 是一个接口 被在BeanFactory中的对象去实现
+ * If a bean implements this
  * interface, it is used as a factory for an object to expose, not directly as a
- * bean instance that will be exposed itself.
+ * bean instance that will be exposed itself. 如果一个bean实现了这个接口 将作为一个工厂来公开 而不直接作为要公开的bean实例本身
  *
  * <p><b>NB: A bean that implements this interface cannot be used as a normal bean.</b>
  * A FactoryBean is defined in a bean style, but the object exposed for bean

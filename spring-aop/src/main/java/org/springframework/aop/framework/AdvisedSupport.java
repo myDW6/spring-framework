@@ -82,6 +82,7 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 
 	/** Cache with Method as key and advisor chain List as value. */
 	private transient Map<MethodCacheKey, List<Object>> methodCache;
+	//可以理解成对这个Method方法应用后面的list中的拦截器
 
 	/**
 	 * Interfaces to be implemented by the proxy. Held in List to keep the order
@@ -91,9 +92,9 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 
 	/**
 	 * List of Advisors. If an Advice is added, it will be wrapped
-	 * in an Advisor before being added to this List.
+	 * in an Advisor before being added to this List. 会被包装成一个Advisor通知器
 	 */
-	private List<Advisor> advisors = new ArrayList<>();
+	private List<Advisor> advisors = new ArrayList<>(); //Advisor通知器包括了通知Advice和PointCut
 
 
 	/**
@@ -471,6 +472,7 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 					this, method, targetClass);
 			this.methodCache.put(cacheKey, cached);
 		}
+		//缓存方法和对这个方法的拦截器列表
 		return cached;
 	}
 

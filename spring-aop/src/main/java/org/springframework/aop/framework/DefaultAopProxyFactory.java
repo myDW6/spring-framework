@@ -53,6 +53,7 @@ public class DefaultAopProxyFactory implements AopProxyFactory, Serializable {
 	public AopProxy createAopProxy(AdvisedSupport config) throws AopConfigException {
 		if (!NativeDetector.inNativeImage() &&
 				(config.isOptimize() || config.isProxyTargetClass() || hasNoUserSuppliedProxyInterfaces(config))) {
+			//三个条件都为假 则使用jdk动态代理
 			Class<?> targetClass = config.getTargetClass();
 			if (targetClass == null) {
 				throw new AopConfigException("TargetSource cannot determine target class: " +
@@ -61,7 +62,7 @@ public class DefaultAopProxyFactory implements AopProxyFactory, Serializable {
 			if (targetClass.isInterface() || Proxy.isProxyClass(targetClass)) {
 				return new JdkDynamicAopProxy(config);
 			}
-			return new ObjenesisCglibAopProxy(config);
+			return new ObjenesisCglibAopProxy(config);//spring提供的Objenesis是Cglib子类 Cglib间接使用 因为Cglib是父类
 		}
 		else {
 			return new JdkDynamicAopProxy(config);

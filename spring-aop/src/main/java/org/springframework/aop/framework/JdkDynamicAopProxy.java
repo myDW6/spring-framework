@@ -41,7 +41,7 @@ import org.springframework.util.ClassUtils;
  *
  * <p>Creates a dynamic proxy, implementing the interfaces exposed by
  * the AopProxy. Dynamic proxies <i>cannot</i> be used to proxy methods
- * defined in classes, rather than interfaces.
+ * defined in classes, rather than interfaces.动态代理的限制 不能代理公开在类中的方法 只能是接口
  *
  * <p>Objects of this type should be obtained through proxy factories,
  * configured by an {@link AdvisedSupport} class. This class is internal
@@ -108,6 +108,7 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 			throw new AopConfigException("No advisors and no TargetSource specified");
 		}
 		this.advised = config;
+		//completeProxiedInterfaces会对接口进行补全 不仅仅要实现我们指定的接口 还要实现Spring需要它实现的那些接口
 		this.proxiedInterfaces = AopProxyUtils.completeProxiedInterfaces(this.advised, true);
 		findDefinedEqualsAndHashCodeMethods(this.proxiedInterfaces);
 	}
@@ -160,7 +161,7 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 		Object oldProxy = null;
 		boolean setProxyContext = false;
 
-		TargetSource targetSource = this.advised.targetSource;
+		TargetSource targetSource = this.advised.targetSource;//获取到被代理的目标源
 		Object target = null;
 
 		try {
@@ -192,15 +193,17 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 
 			// Get as late as possible to minimize the time we "own" the target,
 			// in case it comes from a pool.
-			target = targetSource.getTarget();
+			target = targetSource.getTarget(); //获取到要被代理的目标对象
 			Class<?> targetClass = (target != null ? target.getClass() : null);
 
-			// Get the interception chain for this method.
+			//程序aop.myMethod()方法 这个myMethod方法会被转为一个method对象 以参数的形式传进来
+			// Get the interception chain for this method. 获取到针对该方法的拦截链 那些拦截对象
 			List<Object> chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass);
 
 			// Check whether we have any advice. If we don't, we can fallback on direct
 			// reflective invocation of the target, and avoid creating a MethodInvocation.
 			if (chain.isEmpty()) {
+				//如果拦截器链为空 直接调用目标方法
 				// We can skip creating a MethodInvocation: just invoke the target directly
 				// Note that the final invoker must be an InvokerInterceptor so we know it does
 				// nothing but a reflective operation on the target, and no hot swapping or fancy proxying.
@@ -208,7 +211,9 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 				retVal = AopUtils.invokeJoinpointUsingReflection(target, method, argsToUse);
 			}
 			else {
-				// We need to create a method invocation...
+				//需要创建一个MethodInvocation   ReflectiveMethodInvocation是spring aop最为核心的组件 通过这个组件 我们
+				//可以以反射的方式调用目标组件 且在之前之后追加业务逻辑
+				// We need to create a method invocation... 创建一个方法调用 这个MethodInvocation其实就是我们定义的Advicr中的需要传递的那个参数
 				MethodInvocation invocation =
 						new ReflectiveMethodInvocation(proxy, target, method, args, targetClass, chain);
 				// Proceed to the joinpoint through the interceptor chain.
