@@ -26,8 +26,12 @@ import org.springframework.lang.Nullable;
 
 /**
  * A variant of {@link ObjectFactory} designed specifically for injection points,
+ * ObjectFactory的一个变形 专门为注入点设计的
  * allowing for programmatic optionality and lenient not-unique handling.
- *
+ * 允许编程的可选性和宽松的非唯一处理。
+ * 如果能有一种机制，我想获取一个 Bean 的时候，你可以先不给我报错，先给我一个包装让我拿着，
+ * 回头我自己用的时候再拆开决定里面有还是没有，这样是不是就省去了 IOC 容器报错的麻烦事了呢
+ *这个ObjectProvider就是干这个事的
  * <p>As of 5.1, this interface extends {@link Iterable} and provides {@link Stream}
  * support. It can be therefore be used in {@code for} loops, provides {@link #forEach}
  * iteration and allows for collection-style {@link #stream} access.
@@ -50,7 +54,7 @@ public interface ObjectProvider<T> extends ObjectFactory<T>, Iterable<T> {
 	 * @throws BeansException in case of creation errors
 	 * @see #getObject()
 	 */
-	T getObject(Object... args) throws BeansException;
+	T getObject(Object... args) throws BeansException;  //相当于延后了 Bean 的获取时机，也延后了异常可能出现的时机
 
 	/**
 	 * Return an instance (possibly shared or independent) of the object
@@ -60,7 +64,7 @@ public interface ObjectProvider<T> extends ObjectFactory<T>, Iterable<T> {
 	 * @see #getObject()
 	 */
 	@Nullable
-	T getIfAvailable() throws BeansException;
+	T getIfAvailable() throws BeansException; //可以在找不到 Bean 时返回 null 而不抛出异常
 
 	/**
 	 * Return an instance (possibly shared or independent) of the object

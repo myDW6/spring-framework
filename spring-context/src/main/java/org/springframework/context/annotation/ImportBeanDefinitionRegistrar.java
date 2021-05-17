@@ -58,6 +58,7 @@ import org.springframework.core.type.AnnotationMetadata;
  * @see ImportSelector
  * @see Configuration
  */
+//ImportBeanDefinitionRegistrar 为编程式向 IOC 容器中导入 Bean 。不过由于它导入的实际是 BeanDefinition
 public interface ImportBeanDefinitionRegistrar {
 
 	/**

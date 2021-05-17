@@ -36,13 +36,19 @@ import org.springframework.util.StringValueResolver;
  * facilities to configure a bean factory, in addition to the bean factory
  * client methods in the {@link org.springframework.beans.factory.BeanFactory}
  * interface.
+ * 大多数 BeanFactory 的实现类都会实现这个带配置的接口。除了 BeanFactory 接口中的基础获取方法之外，还提供了配置 BeanFactory 的功能。
+ * 一开始学习面向对象编程时，就知道一个类的属性设置为 private 后，提供 get 方法则意味着该属性可读，提供 set 方法则意味着该属性可写。
+ * 同样的，在 SpringFramework 的这些 BeanFactory ，包括后面的 ApplicationContext 中，都会有这样的设计。
+ * 普通的 BeanFactory 只有 get 相关的操作，而 Configurable 开头的 BeanFactory 或者 ApplicationContext 就具有了 set 的操作
  *
  * <p>This bean factory interface is not meant to be used in normal application
  * code: Stick to {@link org.springframework.beans.factory.BeanFactory} or
  * {@link org.springframework.beans.factory.ListableBeanFactory} for typical
  * needs. This extended interface is just meant to allow for framework-internal
  * plug'n'play and for special access to bean factory configuration methods.
- *
+ * ConfigurableBeanFactory 接口并不希望开发者在应用程序代码中使用，而是坚持使用 BeanFactory 或 ListableBeanFactory 。
+ * 此扩展接口仅用于允许在框架内部进行即插即用，并允许对 BeanFactory 中的配置方法的特殊访问。
+ * 原因也很简单，程序在运行期间按理不应该对 BeanFactory 再进行频繁的变动，此时只应该有读的动作，而不应该出现写的动作。
  * @author Juergen Hoeller
  * @since 03.11.2003
  * @see org.springframework.beans.factory.BeanFactory

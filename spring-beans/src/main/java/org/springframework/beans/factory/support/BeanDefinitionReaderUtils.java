@@ -104,7 +104,7 @@ public abstract class BeanDefinitionReaderUtils {
 			BeanDefinition definition, BeanDefinitionRegistry registry, boolean isInnerBean)
 			throws BeanDefinitionStoreException {
 
-		String generatedBeanName = definition.getBeanClassName();
+		String generatedBeanName = definition.getBeanClassName(); //生成bean的名称首先取了bean的class
 		if (generatedBeanName == null) {
 			if (definition.getParentName() != null) {
 				generatedBeanName = definition.getParentName() + "$child";
@@ -119,10 +119,12 @@ public abstract class BeanDefinitionReaderUtils {
 		}
 
 		if (isInnerBean) {
+			//如果是一个嵌套bean bean名称 # 数字
 			// Inner bean: generate identity hashcode suffix.
 			return generatedBeanName + GENERATED_BEAN_NAME_SEPARATOR + ObjectUtils.getIdentityHexString(definition);
 		}
 
+		//不是嵌套的bean  就是唯一的 bean名称+#+次数
 		// Top-level bean: use plain class name with unique suffix if necessary.
 		return uniqueBeanName(generatedBeanName, registry);
 	}

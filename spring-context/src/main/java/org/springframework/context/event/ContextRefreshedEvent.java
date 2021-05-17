@@ -26,6 +26,7 @@ import org.springframework.context.ApplicationContext;
  * @see ContextClosedEvent
  */
 @SuppressWarnings("serial")
+//IOC 容器刷新完毕但尚未启动的事件
 public class ContextRefreshedEvent extends ApplicationContextEvent {
 
 	/**

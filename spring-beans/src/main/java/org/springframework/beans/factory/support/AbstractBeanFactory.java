@@ -92,6 +92,15 @@ import org.springframework.util.StringValueResolver;
  * as base class for bean factory implementations which obtain bean definitions
  * from some backend resource (where bean definition access is an expensive operation).
  *
+ * 是 BeanFactory 接口最基础的抽象实现类，提供 ConfigurableBeanFactory SPI 的全部功能。
+ * 我们不假定有一个可迭代的 BeanFactory ，因此也可以用作 BeanFactory 实现的父类，
+ * 该实现可以从某些后端资源（其中 bean 定义访问是一项昂贵的操作）获取 bean 的定义。
+ * 这段注释说好理解，但又有点不好理解。其实它就想表达一个意思：
+ * AbstractBeanFactory 是作为 BeanFactory 接口下面的第一个抽象的实现类，
+ * 它具有最基础的功能，并且它可以从配置源（之前看到的 xml 、LDAP 、RDBMS 等）获取 Bean 的定义信息，
+ * 而这个 Bean 的定义信息就是 BeanDefinition
+ * SPI 全称为 Service Provider Interface，是 jdk 内置的一种服务提供发现机制。说白了，它可以加载预先在特定位置下配置的一些类
+ *
  * <p>This class provides a singleton cache (through its base class
  * {@link org.springframework.beans.factory.support.DefaultSingletonBeanRegistry},
  * singleton/prototype determination, {@link org.springframework.beans.factory.FactoryBean}
@@ -100,6 +109,13 @@ import org.springframework.util.StringValueResolver;
  * interface, custom destroy methods). Furthermore, it can manage a bean factory
  * hierarchy (delegating to the parent in case of an unknown bean), through implementing
  * the {@link org.springframework.beans.factory.HierarchicalBeanFactory} interface.
+ *此类可以提供单实例 Bean 的缓存（通过其父类 DefaultSingletonBeanRegistry ），
+ * 单例/原型 Bean 的决定，
+ * FactoryBean 处理，
+ * Bean 的别名，AliasRegistry接口
+ * 用于子 bean 定义的 bean 定义合并
+ * 以及 bean 销毁（ DisposableBean 接口，自定义 destroy 方法）。
+ * 此外，它可以通过实现 HierarchicalBeanFactory 接口来管理 BeanFactory 层次结构（在未知 bean 的情况下委托给父工厂）。
  *
  * <p>The main template methods to be implemented by subclasses are
  * {@link #getBeanDefinition} and {@link #createBean}, retrieving a bean definition
@@ -107,6 +123,10 @@ import org.springframework.util.StringValueResolver;
  * respectively. Default implementations of those operations can be found in
  * {@link DefaultListableBeanFactory} and {@link AbstractAutowireCapableBeanFactory}.
  *
+ * 子类要实现的主要模板方法是 getBeanDefinition 和 createBean ，分别为给定的 bean 名称检索 bean 定义信息，
+ * 并根据给定的 bean 定义信息创建 bean 的实例。
+ * 这些操作的默认实现可以在 DefaultListableBeanFactory 和 AbstractAutowireCapableBeanFactory 中找到。
+ * createBean 是 SpringFramework 能管控的所有 Bean 的创建入口
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @author Costin Leau

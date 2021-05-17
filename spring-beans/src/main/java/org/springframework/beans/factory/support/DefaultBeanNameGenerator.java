@@ -32,7 +32,7 @@ public class DefaultBeanNameGenerator implements BeanNameGenerator {
 	 * as used for {@link AbstractBeanDefinitionReader} setup.
 	 * @since 5.2
 	 */
-	public static final DefaultBeanNameGenerator INSTANCE = new DefaultBeanNameGenerator();
+	public static final DefaultBeanNameGenerator INSTANCE = new DefaultBeanNameGenerator(); //单例  为防止老的兼容方式出现问题 所有构造函数还是public
 
 
 	@Override

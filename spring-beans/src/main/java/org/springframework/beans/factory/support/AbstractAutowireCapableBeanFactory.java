@@ -90,11 +90,23 @@ import org.springframework.util.StringUtils;
  * with the full capabilities specified by the {@link RootBeanDefinition} class.
  * Implements the {@link org.springframework.beans.factory.config.AutowireCapableBeanFactory}
  * interface in addition to AbstractBeanFactory's {@link #createBean} method.
+ *它是实现了默认 bean 创建逻辑的的抽象的 BeanFactory 实现类，它具有 RootBeanDefinition 类指定的全部功能。
+ * 除了 AbstractBeanFactory 的 createBean 方法之外，还实现 AutowireCapableBeanFactory 接口。
  *
+ * 其实 createBean 方法也不是最终实现 Bean 的创建，而是有另外一个叫 doCreateBean 方法，
+ * 它同样在 AbstractAutowireCapableBeanFactory 中定义，而且是 protected 方法，没有子类重写它，算是它独享的了
+ *提供Bean的创建逻辑实现 实现了 AutowireCapableBeanFactory 接口，那实现了这个接口就代表着，它可以实现自动注入的功能
+ * 还把 AbstractBeanFactory 的 createBean 方法给实现了，代表它还具有创建 Bean 的功能
+ * 实现了属性赋值和组件注入
  * <p>Provides bean creation (with constructor resolution), property population,
  * wiring (including autowiring), and initialization. Handles runtime bean
  * references, resolves managed collections, calls initialization methods, etc.
  * Supports autowiring constructors, properties by name, and properties by type.
+ *
+ * 提供 Bean 的创建（具有构造方法的解析），属性填充，属性注入（包括自动装配）和初始化。
+ * 处理运行时 Bean 的引用，解析托管集合，调用初始化方法等。支持自动装配构造函数，按名称的属性和按类型的属性。
+ *把 AbstractAutowireCapableBeanFactory 中实现的最最核心功能全部列出来了：
+ * Bean 的创建、属性填充和依赖的自动注入、Bean 的初始化。这部分是创建 Bean 最核心的三个步骤
  *
  * <p>The main template method to be implemented by subclasses is
  * {@link #resolveDependency(DependencyDescriptor, String, Set, TypeConverter)},
@@ -102,11 +114,17 @@ import org.springframework.util.StringUtils;
  * its bean definitions, matching beans will typically be implemented through such
  * a search. For other factory styles, simplified matching algorithms can be implemented.
  *
+ * 子类要实现的主要模板方法是 resolveDependency(DependencyDescriptor, String, Set, TypeConverter) ，
+ * 用于按类型自动装配。如果工厂能够搜索其 bean 定义，则通常将通过此类搜索来实现匹配的 bean 。
+ * 对于其他工厂样式，可以实现简化的匹配算法。
+ *
  * <p>Note that this class does <i>not</i> assume or implement bean definition
  * registry capabilities. See {@link DefaultListableBeanFactory} for an implementation
  * of the {@link org.springframework.beans.factory.ListableBeanFactory} and
  * {@link BeanDefinitionRegistry} interfaces, which represent the API and SPI
  * view of such a factory, respectively.
+ * 请注意，此类不承担或实现 bean 定义注册的功能。有关 ListableBeanFactory 和 BeanDefinitionRegistry 接口的实现，
+ * 请参见DefaultListableBeanFactory ，它们分别表示该工厂的 API 和 SPI 视图。
  *
  * @author Rod Johnson
  * @author Juergen Hoeller

@@ -30,11 +30,23 @@ import org.springframework.lang.Nullable;
  * interface to be implemented by bean factories that are capable of
  * autowiring, provided that they want to expose this functionality for
  * existing bean instances.
+ * 它是 BeanFactory 接口的扩展实现，它可以实现自动装配，前提是开发者希望为现有的 bean 实例公开此功能。
+ * AutowireCapableBeanFactory 本身可以支持自动装配，而且还可以为现有的一些 Bean 也能支持自动装配。
+ * 而这个“现有”的概念，实际上指的是那些不被 SpringFramework 管理的 Bean
  *
  * <p>This subinterface of BeanFactory is not meant to be used in normal
  * application code: stick to {@link org.springframework.beans.factory.BeanFactory}
  * or {@link org.springframework.beans.factory.ListableBeanFactory} for
  * typical use cases.
+ * AutowireCapableBeanFactory 这个子接口不能在常规的应用程序代码中使用：一般情况下，请坚持使用 BeanFactory 或 ListableBeanFactory 。
+ * 其他框架的集成代码可以利用此接口来连接和注入 SpringFramework 无法控制其生命周期的现有 bean 实例。
+ * 理解: 利用此接口来连接和注入 SpringFramework 无法控制其生命周期的现有 bean 实例，这其实已经把它的作用完整的描述出来了：
+ * 你要是真想用它，那也是在跟其它框架集成时，如果其它框架的一些 Bean 实例无法让 SpringFramework 控制，
+ * 但又需要注入一些由 SpringFramework 管理的对象，那就可以用它了。
+ * 自己编写了一个 Servlet ，而这个 Servlet 里面需要引入 IOC 容器中的一个存在的 Service ，应该如何处理呢？
+ * 根据 IOC 的思路，很明显还是两种思路：DL 和 DI ：
+ * DL ：由 Servlet 自己取到 IOC 容器，并直接从 IOC 容器中获取到对应的 Service 并保存至成员属性中【拉】 SpringFramework 有一种机制可以让 Servlet 取到 IOC 容器
+ * DI ：给需要注入的 Service 上标注 @Autowired 等自动注入的注解，并且让 IOC 容器识别这个 Servlet ，完成自动注入【推】 需要这个 AutowireCapableBeanFactory 帮忙注入了
  *
  * <p>Integration code for other frameworks can leverage this interface to
  * wire and populate existing bean instances that Spring does not control
@@ -47,12 +59,16 @@ import org.springframework.lang.Nullable;
  * from an application context too, accessible through ApplicationContext's
  * {@link org.springframework.context.ApplicationContext#getAutowireCapableBeanFactory()}
  * method.
+ *  * 请注意，该接口没有在 ApplicationContext 中实现，因为应用程序代码几乎从未使用过此接口。
+ *  * 也就是说，它也可以从应用程序上下文中获得：可以通过 ApplicationContext 的 getAutowireCapableBeanFactory() 方法进行访问。
  *
  * <p>You may also implement the {@link org.springframework.beans.factory.BeanFactoryAware}
  * interface, which exposes the internal BeanFactory even when running in an
  * ApplicationContext, to get access to an AutowireCapableBeanFactory:
  * simply cast the passed-in BeanFactory to AutowireCapableBeanFactory.
- *
+ * 您还可以实现 BeanFactoryAware 接口，该接口即使在 ApplicationContext 中运行时也公开内部 BeanFactory ，以访问 AutowireCapableBeanFactory ：
+ * 只需将传入的 BeanFactory 强制转换为 AutowireCapableBeanFactory 。
+ * 也就是说通过 BeanFactoryAware 接口注入的 BeanFactory 也就是 AutowireCapableBeanFactory ，可以直接强转拿来用
  * @author Juergen Hoeller
  * @since 04.12.2003
  * @see org.springframework.beans.factory.BeanFactoryAware

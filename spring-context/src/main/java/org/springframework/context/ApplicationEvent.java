@@ -27,6 +27,7 @@ import java.util.EventObject;
  * @see org.springframework.context.ApplicationListener
  * @see org.springframework.context.event.EventListener
  */
+//它是事件模型的抽象，它是一个抽象类，里面也没有定义什么东西，只有事件发生时的时间戳。值得关注的是，它是继承自 jdk 原生的观察者模式的事件模型，并且把它声明为抽象类
 public abstract class ApplicationEvent extends EventObject {
 
 	/** use serialVersionUID from Spring 1.2 for interoperability. */

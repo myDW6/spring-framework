@@ -28,20 +28,33 @@ import org.springframework.util.Assert;
  * from the class path, interpreting plain paths as class path resource names
  * that include the package path (e.g. "mypackage/myresource.txt"). Useful for
  * test harnesses as well as for application contexts embedded within JARs.
+ * 独立的基于 XML 的 ApplicationContext ，它从 classpath 中获取配置文件，
+ * 将纯路径解释为包含包路径的 classpath 资源名称（例如 mypackage / myresource.txt ）。
+ * 对于测试工具以及 jar 包中嵌入的 ApplicationContext 很有用。
+ * 这段话写的很明白，它支持的配置文件加载位置都是 classpath 下取，这种方式的一个好处是：
+ * 如果工程中依赖了一些其他的 jar 包，而工程启动时需要同时传入这些 jar 包中的配置文件，那 ClassPathXmlApplicationContext 就可以加载它们。
  *
  * <p>The config location defaults can be overridden via {@link #getConfigLocations},
  * Config locations can either denote concrete files like "/myfiles/context.xml"
  * or Ant-style patterns like "/myfiles/*-context.xml" (see the
  * {@link org.springframework.util.AntPathMatcher} javadoc for pattern details).
+ * 可以通过 getConfigLocations 方法覆盖配置文件位置的默认值，配置位置可以表示具体的文件，例如 /myfiles/context.xml ，
+ * 也可以表示Ant样式的模式，例如 /myfiles/*-context.xml（请参见 AntPathMatcher 的 javadoc 以获取模式详细信息）。
+ * 上面 AbstractXmlApplicationContext 中就说了，可以重写 getConfigLocations 方法来调整配置文件的默认读取位置，
+ * 它这里又重复了一遍。除此之外它还提到了，加载配置文件的方式可以使用 Ant 模式匹配（比较经典的写法当属 web.xml 中声明的 application-*.xml
  *
  * <p>Note: In case of multiple config locations, later bean definitions will
  * override ones defined in earlier loaded files. This can be leveraged to
  * deliberately override certain bean definitions via an extra XML file.
+ * 注意：如果有多个配置位置，则较新的 BeanDefinition 会覆盖较早加载的文件中的 BeanDefinition ，
+ * 可以利用它来通过一个额外的 XML 文件有意覆盖某些 BeanDefinition 。
  *
  * <p><b>This is a simple, one-stop shop convenience ApplicationContext.
  * Consider using the {@link GenericApplicationContext} class in combination
  * with an {@link org.springframework.beans.factory.xml.XmlBeanDefinitionReader}
  * for more flexible context setup.</b>
+ * 这是一个简单的一站式便利 ApplicationContext 。可以考虑将 GenericApplicationContext 类与 XmlBeanDefinitionReader 结合使用，以实现更灵活的上下文配置。
+ *
  *
  * @author Rod Johnson
  * @author Juergen Hoeller

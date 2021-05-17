@@ -27,6 +27,7 @@ import org.springframework.context.ApplicationContext;
  * @see ContextStartedEvent
  */
 @SuppressWarnings("serial")
+//ContextStoppedEvent 事件也是在 ContextClosedEvent 触发之后才会触发，此时单实例 Bean 还没有被销毁，要先把它们都停掉才可以释放资源，销毁 Bean
 public class ContextStoppedEvent extends ApplicationContextEvent {
 
 	/**

@@ -26,6 +26,8 @@ import org.springframework.context.ApplicationEvent;
  * @since 2.5
  */
 @SuppressWarnings("serial")
+//它在构造时，会把 IOC 容器一起传进去，这意味着事件发生时，可以通过监听器直接取到 ApplicationContext 而不需要做额外的操作，
+// 这才是 SpringFramework 中事件模型扩展最值得的地方
 public abstract class ApplicationContextEvent extends ApplicationEvent {
 
 	/**

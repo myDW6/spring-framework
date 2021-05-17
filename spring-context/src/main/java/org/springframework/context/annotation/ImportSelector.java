@@ -25,6 +25,8 @@ import org.springframework.lang.Nullable;
  * Interface to be implemented by types that determine which @{@link Configuration}
  * class(es) should be imported based on a given selection criteria, usually one or
  * more annotation attributes.
+ * 它是一个接口，它的实现类可以根据指定的筛选标准（通常是一个或者多个注解）来决定导入哪些配置类。
+ * 其实还可以导入普通类
  *
  * <p>An {@link ImportSelector} may implement any of the following
  * {@link org.springframework.beans.factory.Aware Aware} interfaces,
@@ -58,12 +60,14 @@ import org.springframework.lang.Nullable;
  * @see ImportBeanDefinitionRegistrar
  * @see Configuration
  */
+//它的实现类本身不会注入到ioc   像是声明式注入  ImportBeanDefinitionRegistrar编程式注入
 public interface ImportSelector {
 
 	/**
 	 * Select and return the names of which class(es) should be imported based on
 	 * the {@link AnnotationMetadata} of the importing @{@link Configuration} class.
 	 * @return the class names, or an empty array if none
+	 * 返回要导入的类的类名
 	 */
 	String[] selectImports(AnnotationMetadata importingClassMetadata);
 

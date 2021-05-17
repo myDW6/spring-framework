@@ -31,11 +31,17 @@ import org.springframework.core.io.ResourceLoader;
  * {@link org.springframework.context.ResourceLoaderAware} when running in a context)
  * can be checked whether it implements this extended interface too.
  *
+ * 它是一个策略接口，用于将位置模式（例如，Ant 样式的路径模式）解析为 Resource 对象。 这是 ResourceLoader 接口的扩展。
+ * 可以检查传入的 ResourceLoader（例如，在上下文中运行时通过 ResourceLoaderAware 传入的 ApplicationContext ）是否也实现了此扩展接口。
+ *
  * <p>{@link PathMatchingResourcePatternResolver} is a standalone implementation
  * that is usable outside an {@code ApplicationContext}, also used by
  * {@link ResourceArrayPropertyEditor} for populating {@code Resource} array bean
  * properties.
- *
+ *PathMatchingResourcePatternResolver 是一个独立的实现，可在 ApplicationContext 外部使用，
+ * ResourceArrayPropertyEditor 使用它来填充 Resource 数组中 Bean 属性。
+ * 这一段列出了一种 ResourcePatternResolver 的独立实现：基于路径匹配的解析器，
+ * 这种扩展实现的特点是会根据特殊的路径来返回多个匹配到的资源文件。
  * <p>Can be used with any sort of location pattern (e.g. "/WEB-INF/*-context.xml"):
  * Input patterns have to match the strategy implementation. This interface just
  * specifies the conversion method rather than a specific pattern format.
@@ -53,6 +59,7 @@ import org.springframework.core.io.ResourceLoader;
  * @see org.springframework.context.ApplicationContext
  * @see org.springframework.context.ResourceLoaderAware
  */
+//资源模式解析器”，实际上它是根据特定的路径去解析资源文件的
 public interface ResourcePatternResolver extends ResourceLoader {
 
 	/**

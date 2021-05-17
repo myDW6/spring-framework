@@ -85,6 +85,7 @@ import org.springframework.core.annotation.AliasFor;
  * @since 4.2
  * @see EventListenerMethodProcessor
  */
+//使用注解式监听器，组件不再需要实现任何接口，而是直接在需要作出事件反应的方法上标注 @EventListener 注解即可：
 @Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented

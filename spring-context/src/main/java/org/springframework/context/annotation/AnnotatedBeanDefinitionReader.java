@@ -40,7 +40,7 @@ import org.springframework.util.Assert;
  * the same resolution of annotations but for explicitly registered classes only.
  *
  * @author Juergen Hoeller
- * @author Chris Beams
+ * @author Chris Beamsxxxxx
  * @author Sam Brannen
  * @author Phillip Webb
  * @since 3.0

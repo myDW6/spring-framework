@@ -16,6 +16,8 @@
 
 package org.springframework.context.annotation;
 
+import org.springframework.stereotype.Component;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -53,6 +55,13 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+//模块装配需要一个最核心的注解是 @Import
+//思考一个问题：如果使用@Component 或者 @Configuration + @Bean 注解组合  @Component + @ComponentScan 注解组合 这两种方式，如果要注册的 Bean 很多，
+// 要么一个一个的 @Bean 编程式写，要么就得选好包进行组件扫描，而且这种情况还得每个类都标注好 @Component 或者它的衍生注解才行。
+// 面对数量很多的 Bean ，这种装配方式很明显会比较麻烦，需要有一个新的解决方案
+//既然一个模块内部高内聚 低耦合 那我们直接把这个模块拿过来不就可以了吗 既然模块是功能单元，那模块装配，就可以理解为把一个模块需要的核心功能组件都装配好
+//模块装配的核心原则：自定义注解 + @Import 导入组件
+//可以导入 ImportSelector 的实现类  ImportBeanDefinitionRegistrar 的实现类
 public @interface Import {
 
 	/**

@@ -47,6 +47,11 @@ import org.springframework.util.Assert;
  * the {@link org.springframework.beans.factory.support.BeanDefinitionRegistry}
  * interface in order to allow for applying any bean definition readers to it.
  *
+ * 通用 ApplicationContext 的实现，该实现拥有一个内部 DefaultListableBeanFactory 实例，并且不采用特定的 bean 定义格式。
+ * 另外它实现 BeanDefinitionRegistry 接口，以便允许将任何 bean 定义读取器应用于该容器中。
+ * GenericApplicationContext 和AbstractRefreshableApplicationContext都组合了BeanFactory ，也就是说目前ApplicationContext所有的实现类都组合了BeanFactory，
+ * 由此可以得到一个非常非常重要的信息：ApplicationContext 并不是继承了 BeanFactory 的容器，而是组合了 BeanFactory ！ ApplicationContext同时也实现了BeanFactory接口
+ *
  * <p>Typical usage is to register a variety of bean definitions via the
  * {@link org.springframework.beans.factory.support.BeanDefinitionRegistry}
  * interface and then call {@link #refresh()} to initialize those beans
@@ -54,12 +59,21 @@ import org.springframework.util.Assert;
  * {@link org.springframework.context.ApplicationContextAware}, auto-detecting
  * {@link org.springframework.beans.factory.config.BeanFactoryPostProcessor BeanFactoryPostProcessors},
  * etc).
+ * 典型的用法是通过 BeanDefinitionRegistry 接口注册各种 Bean 的定义
+ * ，然后调用 refresh() 以使用应用程序上下文语义来初始化这些 Bean（处理 ApplicationContextAware ，自动检测 BeanFactoryPostProcessors 等）。
+ *GenericApplicationContext借助BeanDefinitionRegistry处理特殊Bean
+ *BeanDefinitionRegistry  Bean 定义的注册器，GenericApplicationContext 实现了它
+ * ，可以自定义注册一些 Bean 。然而在 GenericApplicationContext 中，它实现的定义注册方法 registerBeanDefinition ，
+ * 在底层还是调用的 DefaultListableBeanFactory 执行 registerBeanDefinition 方法，说明它也没有对此做什么扩展。
  *
  * <p>In contrast to other ApplicationContext implementations that create a new
  * internal BeanFactory instance for each refresh, the internal BeanFactory of
  * this context is available right from the start, to be able to register bean
  * definitions on it. {@link #refresh()} may only be called once.
- *
+ * 与为每次刷新创建一个新的内部 BeanFactory 实例的其他 ApplicationContext 实现(AbstractRefreshableApplicationContext)相反，
+ * 此上下文的内部 BeanFactory 从一开始就可用，以便能够在其上注册 Bean 定义。 refresh() 只能被调用一次。
+ * 由于 GenericApplicationContext 中组合了一个 DefaultListableBeanFactory ，
+ * 而这个 BeanFactory 是在 GenericApplicationContext 的构造方法中就已经初始化好了，那么初始化好的 BeanFactory 就不允许在运行期间被重复刷新了
  * <p>Usage example:
  *
  * <pre class="code">
@@ -79,10 +93,19 @@ import org.springframework.util.Assert;
  * resource locations for XML bean definitions, rather than mixing arbitrary bean
  * definition formats. The equivalent in a web environment is
  * {@link org.springframework.web.context.support.XmlWebApplicationContext}.
+ * 对于 XML Bean 定义的典型情况，只需使用 ClassPathXmlApplicationContext 或 FileSystemXmlApplicationContext ，
+ * 因为它们更易于设置（但灵活性较差，因为只能将从标准的资源配置文件中读取 XML Bean 定义，而不能混合使用任意 Bean 定义的格式）。
+ * 在 Web 环境中，替代方案是 XmlWebApplicationContext 。
+ * 这段注释它提到了 xml 的配置，咱之前也讲过，注解驱动的 IOC 容器可以导入 xml 配置文件，
+ * 不过如果大多数都是 xml 配置的话，官方建议还是直接用 ClassPathXmlApplicationContext 或者 FileSystemXmlApplicationContext 就好。
+ * 对比起灵活度来讲，咱也能清晰地认识到：注解驱动的方式在开发时很灵活，但如果需要修改配置时，
+ * 可能需要重新编译配置类；xml 驱动的方式在修改配置时直接修改即可，不需要做任何额外的操作，
+ * 但能配置的内容实在是有些有限。所以这也建议咱开发者在实际开发中，要权衡对比着使用。
  *
  * <p>For custom application context implementations that are supposed to read
  * special bean definition formats in a refreshable manner, consider deriving
  * from the {@link AbstractRefreshableApplicationContext} base class.
+ * 对于应该以可刷新方式读取特殊bean定义格式的自定义应用程序上下文实现，请考虑从 AbstractRefreshableApplicationContext 基类派生。
  *
  * @author Juergen Hoeller
  * @author Chris Beams
@@ -92,6 +115,7 @@ import org.springframework.util.Assert;
  * @see org.springframework.beans.factory.xml.XmlBeanDefinitionReader
  * @see org.springframework.beans.factory.support.PropertiesBeanDefinitionReader
  */
+//注解驱动的 IOC 容器
 public class GenericApplicationContext extends AbstractApplicationContext implements BeanDefinitionRegistry {
 
 	private final DefaultListableBeanFactory beanFactory;
@@ -110,6 +134,7 @@ public class GenericApplicationContext extends AbstractApplicationContext implem
 	 * @see #refresh
 	 */
 	public GenericApplicationContext() {
+		// 内置的beanFactory在GenericApplicationContext创建时就已经初始化好了
 		this.beanFactory = new DefaultListableBeanFactory();
 	}
 
@@ -269,6 +294,7 @@ public class GenericApplicationContext extends AbstractApplicationContext implem
 	 */
 	@Override
 	protected final void refreshBeanFactory() throws IllegalStateException {
+		//// 利用CAS，保证只能设置一次true，如果出现第二次，就抛出重复刷新异常
 		if (!this.refreshed.compareAndSet(false, true)) {
 			throw new IllegalStateException(
 					"GenericApplicationContext does not support multiple refresh attempts: just call 'refresh' once");

@@ -33,9 +33,18 @@ import org.springframework.util.Assert;
  * in particular {@link Configuration @Configuration}-annotated classes, but also plain
  * {@link org.springframework.stereotype.Component @Component} types and JSR-330 compliant
  * classes using {@code javax.inject} annotations.
+ * 独立的注解驱动的 ApplicationContext ，接受组件类作为输入，特别是使用 @Configuration 注解的类，
+ * 还可以使用普通的 @Component 类型和符合 JSR-330 规范（使用 javax.inject 包的注解）的类。
+ * 注解驱动，除了 @Component 及其衍生出来的几个注解，更重要的是 @Configuration 注解，
+ * 一个被 @Configuration 标注的类相当于一个 xml 文件。
+ * 至于下面还提到的关于 JSR-330 的东西，它没有类似于 @Component 的东西（它只是定义了依赖注入的标准，与组件注册无关）
+ * ，它只是说如果一个组件 Bean 里面有 JSR-330 的注解，那它能给解析而已
  *
  * <p>Allows for registering classes one by one using {@link #register(Class...)}
  * as well as for classpath scanning using {@link #scan(String...)}.
+ * 允许使用 register(Class ...) 一对一注册类，以及使用 scan(String ...) 进行类路径的包扫描。
+ * 如果有多个 @Configuration 类，则在以后的类中定义的 @Bean 方法将覆盖在先前的类中定义的方法。
+ * 这可以通过一个额外的 @Configuration 类来故意覆盖某些 BeanDefinition 。
  *
  * <p>In case of multiple {@code @Configuration} classes, {@link Bean @Bean} methods
  * defined in later classes will override those defined in earlier classes. This can

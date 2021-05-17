@@ -31,6 +31,8 @@ package org.springframework.context;
  * @see org.springframework.context.event.EventPublicationInterceptor
  */
 @FunctionalInterface
+//它是事件的发布器。SpringFramework 内部支持很强大的事件监听机制，而 ApplicationContext 作为容器的最顶级，
+// 自然也要实现观察者模式中广播器的角色。
 public interface ApplicationEventPublisher {
 
 	/**

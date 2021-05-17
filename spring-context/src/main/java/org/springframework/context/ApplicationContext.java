@@ -27,6 +27,8 @@ import org.springframework.lang.Nullable;
  * Central interface to provide configuration for an application.
  * This is read-only while the application is running, but may be
  * reloaded if the implementation supports this.
+ * 它是为应用程序提供配置的中央接口。在应用程序运行时，它是只读的，但是如果受支持的话，它可以重新加载。
+ * ApplicationContext 就是中央接口，它就是 SpringFramework 的最最核心。另外它多提了一个概念：重新加载，这个概念很关键
  *
  * <p>An ApplicationContext provides:
  * <ul>
@@ -49,12 +51,16 @@ import org.springframework.lang.Nullable;
  * {@link ApplicationContextAware} beans as well as {@link ResourceLoaderAware},
  * {@link ApplicationEventPublisherAware} and {@link MessageSourceAware} beans.
  *
+ * 除了标准的 BeanFactory 生命周期功能外，ApplicationContext 实现还检测并调用 ApplicationContextAware bean
+ * 以及 ResourceLoaderAware bean， ApplicationEventPublisherAware 和 MessageSourceAware bean。
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @see ConfigurableApplicationContext
  * @see org.springframework.beans.factory.BeanFactory
  * @see org.springframework.core.io.ResourceLoader
  */
+//ApplicationContext 也是支持层级结构的，但这里它的描述是父子上下文，这个概念要区分理解。上下文中包含容器，但又不仅仅是容器。容器只负责管理 Bean ，但上下文中还包括动态增强、资源加载、事件监听机制等多方面扩展功能。
 public interface ApplicationContext extends EnvironmentCapable, ListableBeanFactory, HierarchicalBeanFactory,
 		MessageSource, ApplicationEventPublisher, ResourcePatternResolver {
 

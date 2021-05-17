@@ -30,6 +30,12 @@ import org.springframework.lang.Nullable;
  * Convenient base class for {@link org.springframework.context.ApplicationContext}
  * implementations, drawing configuration from XML documents containing bean definitions
  * understood by an {@link org.springframework.beans.factory.xml.XmlBeanDefinitionReader}.
+ *方便的 ApplicationContext 父类，从包含 XmlBeanDefinitionReader 解析的 BeanDefinition 的 XML 文档中提取配置。
+ *
+ * 子类只需要实现 getConfigResources 和/或 getConfigLocations 方法。
+ * 此外，它们可能会覆盖 getResourceByPath 的钩子回调，以特定于环境的方式解析相对路径，和/或 getResourcePatternResolver 来扩展模式解析。
+ * 由于 AbstractXmlApplicationContext 已经接近于最终的 xml 驱动 IOC 容器的实现了，所以它应该有基本上所有的功能。
+ * 又根据子类的两种不同的配置文件加载方式，说明加载配置文件的策略是不一样的，所以文档注释中有说子类只需要实现 getConfigLocations 这样的方法就好。
  *
  * <p>Subclasses just have to implement the {@link #getConfigResources} and/or
  * the {@link #getConfigLocations} method. Furthermore, they might override
@@ -43,6 +49,7 @@ import org.springframework.lang.Nullable;
  * @see #getConfigLocations
  * @see org.springframework.beans.factory.xml.XmlBeanDefinitionReader
  */
+//最终 ClassPathXmlApplicationContext 和 FileSystemXmlApplicationContext 的直接父类
 public abstract class AbstractXmlApplicationContext extends AbstractRefreshableConfigApplicationContext {
 
 	private boolean validating = true;
@@ -118,6 +125,9 @@ public abstract class AbstractXmlApplicationContext extends AbstractRefreshableC
 	 * @see #getResources
 	 * @see #getResourcePatternResolver
 	 */
+	//加载到配置文件后如何处理?
+	//它解析 xml 配置文件不是自己干活，是组合了一个 XmlBeanDefinitionReader ，让它去解析
+	//可以看到就是调用上面文档注释中提到的 getConfigResources 和 getConfigLocations 方法，取到配置文件的路径 / 资源类，交给 BeanDefinitionReader 解析
 	protected void loadBeanDefinitions(XmlBeanDefinitionReader reader) throws BeansException, IOException {
 		Resource[] configResources = getConfigResources();
 		if (configResources != null) {

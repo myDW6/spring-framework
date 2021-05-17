@@ -27,6 +27,7 @@ import org.springframework.context.ApplicationContext;
  * @see ContextStoppedEvent
  */
 @SuppressWarnings("serial")
+//ContextRefreshedEvent 事件的触发是所有单实例 Bean 刚创建完成后，就发布的事件，此时那些实现了 Lifecycle 接口的 Bean 还没有被回调 start 方法。当这些 start 方法被调用后，ContextStartedEvent 才会被触发。
 public class ContextStartedEvent extends ApplicationContextEvent {
 
 	/**

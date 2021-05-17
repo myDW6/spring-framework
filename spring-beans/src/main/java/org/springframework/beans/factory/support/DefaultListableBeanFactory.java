@@ -89,15 +89,26 @@ import org.springframework.util.StringUtils;
  * Spring's default implementation of the {@link ConfigurableListableBeanFactory}
  * and {@link BeanDefinitionRegistry} interfaces: a full-fledged bean factory
  * based on bean definition metadata, extensible through post-processors.
- *
+ *Spring 的 ConfigurableListableBeanFactory 和 BeanDefinitionRegistry 接口的默认实现，
+ * 它时基于 Bean 的定义信息的的成熟的 BeanFactory 实现，可通过后置处理器进行扩展。
  * <p>Typical usage is registering all bean definitions first (possibly read
  * from a bean definition file), before accessing beans. Bean lookup by name
  * is therefore an inexpensive operation in a local bean definition table,
  * operating on pre-resolved bean definition metadata objects.
+ * 典型的用法是在访问 bean 之前先注册所有 bean 定义信息（可能是从有 bean 定义的文件中读取）。
+ * 因此，按名称查找 Bean 是对本地 Bean 定义表进行的合理操作，该操作对预先解析的 Bean 定义元数据对象进行操作。
+ * DefaultListableBeanFactory 在 AbstractAutowireCapableBeanFactory 的基础上，完成了注册 Bean 定义信息的动作，
+ * 而这个动作就是通过上面的 BeanDefinitionRegistry 来实现的
  *
  * <p>Note that readers for specific bean definition formats are typically
  * implemented separately rather than as bean factory subclasses: see for example
  * {@link org.springframework.beans.factory.xml.XmlBeanDefinitionReader}.
+ *
+ * 请注意，特定 bean 定义信息格式的解析器通常是单独实现的，而不是作为 BeanFactory 的子类实现的，
+ * 有关这部分的内容参见 PropertiesBeanDefinitionReader 和 XmlBeanDefinitionReader 。
+ * DefaultListableBeanFactory不负责解析Bean定义文件
+ * BeanFactory 作为一个统一管理 Bean 组件的容器，它的核心工作就是控制 Bean 在创建阶段的生命周期，
+ * 而对于 Bean 从哪里来，如何被创建，都有哪些依赖要被注入，这些统统与它无关，而是有专门的组件来处理（就是包括上面提到的 BeanDefinitionReader 在内的一些其它组件）
  *
  * <p>For an alternative implementation of the
  * {@link org.springframework.beans.factory.ListableBeanFactory} interface,
@@ -118,6 +129,7 @@ import org.springframework.util.StringUtils;
  * @see #resolveDependency
  */
 @SuppressWarnings("serial")
+//这个类是唯一一个目前使用的 BeanFactory 的落地实现了  会先注册Bean定义信息再创建Bean
 public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFactory
 		implements ConfigurableListableBeanFactory, BeanDefinitionRegistry, Serializable {
 

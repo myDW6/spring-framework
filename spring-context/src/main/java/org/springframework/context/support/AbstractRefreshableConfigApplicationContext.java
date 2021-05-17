@@ -36,6 +36,8 @@ import org.springframework.util.StringUtils;
  * @see #setConfigLocations
  * @see #getDefaultConfigLocations
  */
+//与上面的 AbstractRefreshableApplicationContext 相比较，只是多了一个 Config ，说明它有扩展跟配置相关的特性
+	//用于添加对指定配置位置的通用处理。由于它是基于 xml 配置的 ApplicationContext 的父类，所以肯定需要传入配置源路径，那这个配置的动作就封装在这个 AbstractRefreshableConfigApplicationContext 中了
 public abstract class AbstractRefreshableConfigApplicationContext extends AbstractRefreshableApplicationContext
 		implements BeanNameAware, InitializingBean {
 
